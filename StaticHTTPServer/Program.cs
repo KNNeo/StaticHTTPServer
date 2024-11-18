@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.WindowsServices;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Configuration;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
-using System;
 
 namespace StaticHTTPServer
 {
@@ -30,21 +30,15 @@ namespace StaticHTTPServer
                     .UseWebRoot(path)
                     .UseUrls(ConfigurationManager.AppSettings["ServerAddress"])
                     .UseStartup<Startup>()
-                    .ConfigureLogging((hostingContext, logging) =>
-                    {
-                        //logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-                        logging.AddConsole();
-                        //logging.AddDebug();
-                    })
                     .Build();
 
             if (runAsService)
             {
-                host.RunAsService();
+                host.Run();
             }
             else
             {
-                host.Run();
+                host.RunAsService();
             }
         }
     }
